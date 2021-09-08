@@ -1,0 +1,43 @@
+body {
+  margin: 0;
+  padding: 0;
+  width: 100vw;
+  height: 100vh;
+  display: flex;
+  justify-content: center;
+  background-color: #eeeeee;
+}
+
+canvas, video {
+  border-radius: 10px;
+  position: absolute;
+  top: 150px;
+}
+
+#retry{
+  position: absolute;
+  top: 410px;
+  height: 30px;
+  padding: 5px;
+  background-color: #f9ac19;
+  border: none;
+  color: rgb(255, 255, 255);
+  border-radius: 5px;
+}
+#photo{
+  display: none;
+}
+
+#result{
+  height: 80px;
+  width: 80px;
+  position: absolute;
+  background-color: #eeeeee;
+  top: 40px;
+}
+
+#success_result, #failed_result, #no_result{
+  position: relative;
+  height: 80px;
+  width: 80px;
+}

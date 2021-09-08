@@ -1,0 +1,15 @@
+{
+  "name": "face-recognition",
+  "version": "1.6.2",
+  "description": "Face recognition using faceapi",
+  "main": "server.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Ferozkhan A",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nodemon": "^2.0.12"
+  }
+}
