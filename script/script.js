@@ -44,7 +44,15 @@ video.addEventListener("play", () => {
     // faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
     if (detections.length==0) {
       console.log("no face found");
-      
+      var img3 = document.createElement("img");
+        img3.src = "./assets/notfound.png";
+        img3.id = "not-found";
+        var div = document.getElementById("result");
+        div.innerHTML = "";
+        div.appendChild(img3);
+        setTimeout(()=>{
+          div.innerHTML = "";
+        },3000);
     }
     else if (detections.length == numberOfFaces) {
       if (takepicture()) {
@@ -77,10 +85,10 @@ video.addEventListener("play", () => {
         // console.log(faces[0].descriptor,faces[1].descriptor)
 
         var img = document.createElement("img");
-        img.src = "./assets/success.gif";
+        img.src = "./assets/success.png";
         img.id = "success_result";
         var img1 = document.createElement("img");
-        img1.src = "./assets/failed.gif";
+        img1.src = "./assets/failed.png";
         img1.id = "failed_result";
 
         //Calculate distance between the detected faces
@@ -100,6 +108,12 @@ video.addEventListener("play", () => {
         }
       } catch (error) {
         console.log("Oops! Couldn't find any faces (or) Second face is missing. Try again! ")
+        var img4 = document.createElement("img");
+        img4.src = "./assets/tryagain.png";
+        img4.id = "no_result";
+        var div = document.getElementById("result");
+          div.innerHTML = "";
+          div.appendChild(img4);
       }
     } else {
       (err) => console.error(err);
