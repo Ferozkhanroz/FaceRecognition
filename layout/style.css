@@ -5,7 +5,6 @@ body {
   height: 100vh;
   display: flex;
   justify-content: center;
-  background-color: #eeeeee;
 }
 
 canvas, video {
@@ -24,6 +23,9 @@ canvas, video {
   color: rgb(255, 255, 255);
   border-radius: 5px;
 }
+#retry-image{
+  width: 20px;
+}
 #photo{
   display: none;
 }
@@ -32,12 +34,22 @@ canvas, video {
   height: 80px;
   width: 80px;
   position: absolute;
-  background-color: #eeeeee;
   top: 40px;
 }
 
-#success_result, #failed_result, #no_result{
+#success_result, #failed_result, #no_result, #not-found{
   position: relative;
   height: 80px;
   width: 80px;
+}
+
+#next-page{
+  background-color: rgb(214, 0, 0);
+  position: relative;
+  height: 20px;
+  width: 60px;
+  border-radius: 5px;
+  padding: 5px;
+  top: 410px;
+  left: 125px;
 }
