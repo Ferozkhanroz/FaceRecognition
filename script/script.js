@@ -2,6 +2,8 @@ const video = document.getElementById("video");
 const retry = document.getElementById("retry");
 const photo = document.getElementById("photo");
 let numberOfFaces = 2;
+let human = false;
+let card = false;
 
 //Load all the models first before accessing camera
 Promise.all([
@@ -25,10 +27,64 @@ retry.addEventListener("click", () =>{
   var div = document.getElementById("result");
     div.innerHTML = "";
   numberOfFaces = 2;
+  human = false;
+  card = false;
+  setText( `Human: ${human} , Card: ${card}` )
 })
 
+let model = null;
+
+
+async function trackFace() {
+  const video = document.getElementById("video");
+  const faces = await model.estimateFaces({
+      input: video,
+      returnTensors: false,
+      flipHorizontal: false,
+  });
+  // console.log(faces);
+  faces.forEach(face => {
+      const leftEyesDist = Math.sqrt(
+          (face.annotations.leftEyeLower1[4][0] - face.annotations.leftEyeUpper1[4][0]) ** 2 +
+          (face.annotations.leftEyeLower1[4][1] - face.annotations.leftEyeUpper1[4][1]) ** 2 +
+          (face.annotations.leftEyeLower1[4][2] - face.annotations.leftEyeUpper1[4][2]) ** 2
+      );
+      // console.log(leftEyesDist);
+
+      const rightEyesDist = Math.sqrt(
+          (face.annotations.rightEyeLower1[4][0] - face.annotations.rightEyeUpper1[4][0]) ** 2 +
+          (face.annotations.rightEyeLower1[4][1] - face.annotations.rightEyeUpper1[4][1]) ** 2 +
+          (face.annotations.rightEyeLower1[4][2] - face.annotations.rightEyeUpper1[4][2]) ** 2
+      );
+      // console.log(rightEyesDist);
+
+      var avg= (leftEyesDist+rightEyesDist)/2;
+
+      if (avg<15) {
+        card = true;
+      } else if(avg>15) {
+        human = true;
+      }
+      setText( `Human: ${human} , Card: ${card}` )
+      
+  });
+requestAnimationFrame(trackFace);
+}
+
+
+function setText( text ) {
+  document.getElementById( "status" ).innerText = text;
+}
+
 //Create a canvas overlay to draw detections
-video.addEventListener("play", () => {
+video.addEventListener("play", async () => {
+
+model = await faceLandmarksDetection.load(
+  faceLandmarksDetection.SupportedPackages.mediapipeFacemesh
+);
+
+trackFace();
+
   const canvas = faceapi.createCanvasFromMedia(video);
   document.body.append(canvas);
   const displaySize = { width: video.width, height: video.height };
@@ -43,6 +99,9 @@ video.addEventListener("play", () => {
     faceapi.draw.drawDetections(canvas, resizedDetections);
     // faceapi.draw.drawFaceLandmarks(canvas, resizedDetections);
     if (detections.length==0) {
+      human = false; 
+      card = false;
+      setText( `Human: ${human} , Card: ${card}` )
       console.log("no face found");
       var img3 = document.createElement("img");
         img3.src = "./assets/notfound.png";
@@ -54,7 +113,7 @@ video.addEventListener("play", () => {
           div.innerHTML = "";
         },3000);
     }
-    else if (detections.length == numberOfFaces) {
+    else if (detections.length == numberOfFaces && human==true && card==true) {
       if (takepicture()) {
         console.log("Capturing ended");
         numberOfFaces = 0;
@@ -99,6 +158,9 @@ video.addEventListener("play", () => {
           var div = document.getElementById("result");
           div.innerHTML = "";
           div.appendChild(img);
+          setTimeout(()=>{
+            window.open("https://www.halleyx.com/","_self");
+          },1000);
           return 1;
         } else {
           console.log("Faces does not match, Try again!");
@@ -106,7 +168,7 @@ video.addEventListener("play", () => {
           div.innerHTML = "";
           div.appendChild(img1);
         }
-      } catch (error) {
+      } catch (error) { 
         console.log("Oops! Couldn't find any faces (or) Second face is missing. Try again! ")
         var img4 = document.createElement("img");
         img4.src = "./assets/tryagain.png";
