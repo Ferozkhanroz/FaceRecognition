@@ -53,3 +53,7 @@ canvas, video {
   top: 410px;
   left: 125px;
 }
+
+#status{
+  color: #f9ac19;
+}
